@@ -1,0 +1,26 @@
+name: "Sample Skopeo Copy Action"
+
+on: [push]
+
+jobs:
+  copy_images:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v1
+
+      # - name: Log in to Quay.io
+      #   uses: redhat-actions/podman-login@v1
+      #   with:
+      #     username: ${{ secrets.QUAY_ROBOT }}
+      #     password: ${{ secrets.QUAY_ROBOT_PASS }}
+      #     registry: quay.io/komish/skopeo-multibin
+
+      - name: "skopeo copy images"
+        uses: ./.github/actions/skopeo-copy
+        with:
+          srcImg: quay.io/komish/skopeo-multibin:0.0.1
+          dstImg: quay.io/komish/skopeo-multibin:0.0.1-copied-using-action
+          skopeoCopyFlags: "--all --preserve-digests"
+          username: ${{ secrets.QUAY_ROBOT }}
+          password: ${{ secrets.QUAY_ROBOT_PASS }}
+          registry: quay.io/komish/skopeo-multibin
